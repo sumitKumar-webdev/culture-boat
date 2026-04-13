@@ -67,13 +67,13 @@ body {
 }
 
 .grid-bg {
-  background-color: #050505;
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.055) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
-  background-size: 48px 48px;
+  background-color: #27221f;
+  background-image: linear-gradient(145deg, #2f2a27 0%, #26211e 55%, #1d1917 100%),
+    linear-gradient(rgba(255, 255, 255, 0.085) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.085) 1px, transparent 1px);
+  background-size: cover, 48px 48px, 48px 48px;
+  background-attachment: fixed;
+  background-blend-mode: normal, soft-light, soft-light;
 }
 
 @property --glow-strength {
@@ -148,4 +148,59 @@ h6 {
 .brand-marquee__track {
   width: max-content;
   will-change: transform;
+}
+
+.water-wave-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.water-wave-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.route-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-loader__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  color: #e8ddcc;
+}
+
+.route-loader__logo {
+  opacity: 0.9;
+}
+
+.route-loader__bar {
+  width: min(260px, 70vw);
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.route-loader__bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #c89a5b, #f0d8a8);
+  box-shadow: 0 0 16px rgba(213, 176, 108, 0.6);
+  transition: width 140ms ease-out;
+}
+
+.route-loader__progress {
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  opacity: 0.75;
 }

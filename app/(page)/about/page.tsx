@@ -42,6 +42,7 @@ export default function AboutPage() {
                 alt="Creative studio atmosphere"
                 src="/About/About-main.jpeg"
                 fill
+                unoptimized
                 sizes="(max-width: 768px) 90vw, 50vw"
                 className="object-cover opacity-90"
                 style={{ filter: "url(#waterFilter)" }}

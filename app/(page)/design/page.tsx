@@ -38,6 +38,7 @@ export default function page() {
             </div>
             <div className="flex-1 bg-black/80 relative w-full max-w-full lg:max-w-2xl mx-auto lg:mx-0 z-10">
               <Image
+                unoptimized
                 alt="Traditional Fashion Design"
                 width={892}
                 height={578}
@@ -54,6 +55,7 @@ export default function page() {
           <div className="flex flex-col lg:flex-row gap-0 lg:gap-24 justify-center mb-2 mx-auto items-stretch">
             <div className="relative overflow-hidden w-full lg:w-162.5 md:mb-0 mx-auto lg:mx-0 z-10 flex items-stretch">
               <Image
+                unoptimized
                 alt="Gurorganic Campaign"
                 width={892}
                 height={578}
@@ -63,6 +65,7 @@ export default function page() {
             </div>
             <div className="relative overflow-hidden w-full lg:w-125 lg:mx-0 z-10 mt-10 md:mt-0 flex items-stretch">
               <Image
+                unoptimized
                 alt="Fashion Photography"
                 width={737}
                 height={554}
@@ -92,6 +95,7 @@ export default function page() {
                 aria-label="Play video"
               >
                 <Image
+                  unoptimized
                   alt="Kalki Fashion"
                   width={1040}
                   height={674}
@@ -125,6 +129,7 @@ export default function page() {
             </div>
             <div className="relative overflow-hidden w-full lg:w-[50%] lg:max-w-87.5 mx-auto lg:mx-0 z-10 flex items-stretch mt-5 md:mt-0">
               <Image
+                unoptimized
                 alt="Product Photography"
                 width={800}
                 height={1200}
@@ -150,6 +155,7 @@ export default function page() {
           <div className="flex flex-col lg:flex-row gap-5 lg:gap-24 justify-center lg:mx-4 mb-0 md:mb-9">
             <div className="relative overflow-hidden w-full lg:w-[70%] lg:max-w-100 mx-auto lg:mx-0 z-10">
               <Image
+                unoptimized
                 alt="Visual Vocabulary Design 1"
                 width={600}
                 height={899}
@@ -159,6 +165,7 @@ export default function page() {
             </div>
             <div className="relative overflow-hidden w-full lg:w-[70%] lg:max-w-100 mx-auto lg:mx-0 z-10">
               <Image
+                unoptimized
                 alt="Visual Vocabulary Design 2"
                 width={600}
                 height={899}
@@ -184,6 +191,7 @@ export default function page() {
           <div className="flex flex-col lg:flex-row gap-5 lg:gap-24 justify-center lg:mx-4 mb-5 items-start">
             <div className="relative w-full lg:w-auto lg:max-w-125 mx-auto lg:mx-0 z-10">
               <Image
+                unoptimized
                 alt="Print Design 1"
                 width={500}
                 height={700}
@@ -193,6 +201,7 @@ export default function page() {
             </div>
             <div className="relative w-full lg:w-auto lg:max-w-125 mx-auto lg:mx-0 z-10">
               <Image
+                unoptimized
                 alt="Print Design 2"
                 width={500}
                 height={700}
@@ -210,6 +219,7 @@ export default function page() {
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-5 items-start justify-center lg:px-4">
             <div className="flex flex-col gap-4 w-full lg:max-w-xl mx-auto lg:mx-0 z-10">
               <Image
+                unoptimized
                 alt="Portfolio Item 1"
                 width={1625}
                 height={3083}
@@ -217,6 +227,7 @@ export default function page() {
                 src="/Mailer/1.jpeg"
               />
               <Image
+                unoptimized
                 alt="Portfolio Item 4"
                 width={1180}
                 height={2650}
@@ -224,6 +235,7 @@ export default function page() {
                 src="/Mailer/4.jpeg"
               />
               <Image
+                unoptimized
                 alt="Portfolio Item 6"
                 width={600}
                 height={2616}
@@ -233,6 +245,7 @@ export default function page() {
             </div>
             <div className="flex flex-col gap-4 w-full lg:max-w-xl mx-auto lg:mx-0 z-10">
               <Image
+                unoptimized
                 alt="Portfolio Item 2"
                 width={1223}
                 height={1363}
@@ -240,6 +253,7 @@ export default function page() {
                 src="/Mailer/2.jpeg"
               />
               <Image
+                unoptimized
                 alt="Portfolio Item 5"
                 width={1080}
                 height={3776}
@@ -247,6 +261,7 @@ export default function page() {
                 src="/Mailer/5.jpeg"
               />
               <Image
+                unoptimized
                 alt="Portfolio Item 7"
                 width={1621}
                 height={2587}
@@ -254,6 +269,7 @@ export default function page() {
                 src="/Mailer/7.jpeg"
               />
               <Image
+                unoptimized
                 alt="Portfolio Item 3"
                 width={853}
                 height={1930}
@@ -274,3 +290,4 @@ export default function page() {
     </div>
   );
 }
+

@@ -3,6 +3,7 @@ import { Bebas_Neue, Cormorant_Garamond, Geist, Geist_Mono } from "next/font/goo
 import "./globals.css";
 import Header from "./component/Header/Header";
 import { CustomCursor } from "./component/Custom Cursor/custom-cursor";
+import PageLoader from "./component/PageLoader/page-loader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,6 +54,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${cormorantGaramond.variable} h-full antialiased`}
       >
       <body className="min-h-full grid-bg">
+        <PageLoader />
         <CustomCursor />
         <Header />
         {children}

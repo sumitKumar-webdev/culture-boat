@@ -91,6 +91,7 @@ export function BrandCarousel({
                   alt={logo.alt}
                   width={2200}
                   height={2240}
+                  unoptimized
                   className="w-[170px] h-[150px] object-contain no-water-effect"
                   src={logo.src}
                 />

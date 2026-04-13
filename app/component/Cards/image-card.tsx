@@ -14,6 +14,7 @@ export function ImageCard({
           src={src}
           alt={alt}
           fill
+          unoptimized
           sizes="(max-width: 640px) 360px, (max-width: 900px) 420px, 560px"
           className="object-cover"
         />

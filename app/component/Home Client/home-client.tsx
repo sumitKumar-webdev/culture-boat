@@ -292,7 +292,7 @@ export default function HomePageClient({
           >
             <div
               ref={textContainerRef}
-              className="relative h-full w-full text-[clamp(2.6rem,6.5vw,4.2rem)] font-bold leading-none opacity-0 transform-3d will-change-transform max-[900px]:text-[clamp(2.2rem,9.5vw,3.9rem)] max-[640px]:text-[clamp(4.8rem,16.5vw,6.4rem)]"
+              className="relative h-full w-full text-[clamp(2.6rem,6.5vw,4.2rem)] font-bold leading-none tracking-[0.08em] opacity-0 transform-3d will-change-transform max-[900px]:text-[clamp(2.2rem,9.5vw,3.9rem)] max-[640px]:text-[clamp(3.6rem,13.5vw,5rem)]"
             >
               {textItems.map((item) => (
                 <div
@@ -315,7 +315,7 @@ export default function HomePageClient({
         <div className="absolute inset-0 z-10 flex items-center justify-center gap-12 max-[900px]:gap-4 max-[640px]:gap-3">
           <div
             ref={leftImgRef}
-            className="flex w-[48%] flex-col items-end justify-center gap-6 will-change-transform max-[900px]:gap-5 max-[640px]:w-[47%] max-[640px]:gap-4"
+            className="flex w-[48%] flex-col items-end justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
             style={{ transform: `translate3d(0, ${-baseOffset - phaseShift}px, 0)` }}
           >
             {leftImages.map((image) => (
@@ -325,7 +325,7 @@ export default function HomePageClient({
 
           <div
             ref={rightImgRef}
-            className="flex w-[48%] flex-col items-start justify-center gap-6 will-change-transform max-[900px]:gap-5 max-[640px]:w-[47%] max-[640px]:gap-4"
+            className="flex w-[48%] flex-col items-start justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
             style={{ transform: `translate3d(0, ${baseOffset + phaseShift}px, 0)` }}
           >
             {rightImages.map((image) => (

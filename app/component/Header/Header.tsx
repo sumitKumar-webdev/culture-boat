@@ -28,6 +28,7 @@ export default function Header() {
                 alt={`${site.name} logo`}
                 width={160}
                 height={48}
+                unoptimized
                 className="h-8 w-auto object-contain"
                 priority
               />

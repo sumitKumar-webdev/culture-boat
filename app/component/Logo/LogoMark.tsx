@@ -12,6 +12,7 @@ export default function LogoMark({ className }: LogoMarkProps) {
         alt="Anchor icon"
         width={30}
         height={30}
+        unoptimized
         className="h-8 w-auto"
         priority
       />
@@ -20,6 +21,7 @@ export default function LogoMark({ className }: LogoMarkProps) {
         alt="Bubbles icon"
         width={38}
         height={30}
+        unoptimized
         className="h-7 w-auto"
         priority
       />
@@ -28,6 +30,7 @@ export default function LogoMark({ className }: LogoMarkProps) {
         alt="Lighthouse icon"
         width={30}
         height={30}
+        unoptimized
         className="h-8 w-auto"
         priority
       />
