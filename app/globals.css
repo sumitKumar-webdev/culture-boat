@@ -3,6 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --scrollbar-track: #142237df;
+  --scrollbar-thumb: #243b5b;
+  --scrollbar-thumb-hover: #374151;
 }
 
 @theme inline {
@@ -10,17 +13,139 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-bebas);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --scrollbar-track: #0a0a0a;
+    --scrollbar-thumb: #1f2937;
+    --scrollbar-thumb-hover: #374151;
   }
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0f172a, var(--scrollbar-thumb));
+  border-radius: 999px;
+  border: 2px solid var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--scrollbar-thumb-hover), #475569);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+}
+
+.grid-bg {
+  background-color: #050505;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+@property --glow-strength {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.ring-text {
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-strength: 0;
+  --glow-inner: 70px;
+  --glow-mid: 100px;
+  --glow-outer: 140px;
+  color: transparent;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.7),
+      rgba(255, 255, 255, 0.7)
+    ),
+    radial-gradient(
+      circle at var(--glow-x) var(--glow-y),
+      rgba(255, 255, 255, calc(1 * var(--glow-strength))) 0,
+      rgba(255, 255, 255, calc(1 * var(--glow-strength))) var(--glow-inner),
+      rgba(255, 255, 255, calc(0.7 * var(--glow-strength))) var(--glow-mid),
+      rgba(255, 255, 255, 0) var(--glow-outer)
+    );
+  background-clip: text;
+  -webkit-background-clip: text;
+  transition: --glow-strength 200ms ease;
+}
+
+.ring-text.glow-active {
+  --glow-strength: 1;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .customCursor {
+    display: none;
+  }
+  body {
+    cursor: auto;
+  }
+}
+
+.font-bebas {
+  font-family: var(--font-bebas), sans-serif;
+}
+
+.font-luxury {
+  font-family: var(--font-luxury), "Times New Roman", serif;
+}
+
+.font-bellota,
+.font-bellota-light {
+  font-family: var(--font-luxury), "Times New Roman", serif;
+}
+
+.font-bellota-light {
+  font-weight: 300;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-luxury), "Times New Roman", serif;
+}
+
+.brand-marquee__track {
+  width: max-content;
+  will-change: transform;
 }

@@ -1,0 +1,16 @@
+{
+  "name": "Astra Studio",
+  "short_name": "Astra",
+  "description": "Animated creative studio homepage with infinitely scrolling type and image rails.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#171717",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
