@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { HamburgerButton } from "../Custom Icons/hamburger-btn";
+import LogoMark from "../Logo/LogoMark";
 import { site } from "../../content/siteData";
 
 export default function Header() {
@@ -31,7 +32,7 @@ export default function Header() {
                 priority
               />
             ) : (
-              <span>{site.logoText}</span>
+              <LogoMark className="text-white" />
             )}
           </Link>
         </div>

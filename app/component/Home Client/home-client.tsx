@@ -335,7 +335,7 @@ export default function HomePageClient({
         </div>
       </section>
 
-      <p className="absolute bottom-36 z-20 tracking-[0.08em] text-white/80 max-[640px]:bottom-12 max-[640px]:text-[1rem]">
+      <p className="absolute bottom-15 z-20 tracking-[0.08em] text-white/80 max-[640px]:bottom-12 max-[640px]:text-[1rem] font-semibold">
         <span
           data-glow
           className="ring-text inline-block cursor-none px-2 py-1"
