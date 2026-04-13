@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import {
   Application,
   DisplacementFilter,
+  Sprite,
   Texture,
   TilingSprite,
 } from "pixi.js";
@@ -18,9 +19,7 @@ export default function WaterWave() {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
-    if (prefersReducedMotion.matches) {
-      return;
-    }
+    if (prefersReducedMotion.matches) return;
 
     const app = new Application();
     let disposed = false;
@@ -73,41 +72,89 @@ export default function WaterWave() {
         app.destroy(true);
         return;
       }
+
       causticsCtx.filter = "blur(10px)";
       causticsCtx.drawImage(noiseCanvas, 0, 0);
 
       const noiseTexture = Texture.from(noiseCanvas);
-      noiseTexture.baseTexture.wrapMode = "repeat";
-      noiseTexture.baseTexture.scaleMode = "linear";
-
       const causticsTexture = Texture.from(causticsCanvas);
-      causticsTexture.baseTexture.wrapMode = "repeat";
-      causticsTexture.baseTexture.scaleMode = "linear";
 
-      const displacementSprite = new TilingSprite(
-        noiseTexture,
-        app.screen.width,
-        app.screen.height,
-      );
-      displacementSprite.renderable = false;
+      // Must be Sprite, not TilingSprite
+      const displacementSprite = Sprite.from(noiseTexture);
+      displacementSprite.visible = false;
+      displacementSprite.width = app.screen.width;
+      displacementSprite.height = app.screen.height;
       app.stage.addChild(displacementSprite);
 
       const displacementFilter = new DisplacementFilter({
         sprite: displacementSprite,
-        scale: 28,
+        scale: { x: 28, y: 22 },
       });
-      displacementFilter.scale.y = 22;
 
-      const overlay = new TilingSprite(
-        causticsTexture,
-        app.screen.width,
-        app.screen.height,
-      );
+      const overlay = new TilingSprite({
+        texture: causticsTexture,
+        width: app.screen.width,
+        height: app.screen.height,
+      });
+
       overlay.tint = 0xcfe6ff;
       overlay.alpha = 0.32;
       overlay.blendMode = "screen";
       overlay.tileScale.set(1.4, 1.4);
       overlay.filters = [displacementFilter];
+      app.stage.addChild(overlay);
+
+      onResize = () => {
+        displacementSprite.width = app.screen.width;
+        displacementSprite.height = app.screen.height;
+        overlay.width = app.screen.width;
+        overlay.height = app.screen.height;
+      };
+
+      onMotionChange = () => {
+        if (prefersReducedMotion.matches) {
+          app.ticker.stop();
+        } else {
+          app.ticker.start();
+        }
+      };
+
+      prefersReducedMotion.addEventListener("change", onMotionChange);
+      app.renderer.on("resize", onResize);
+
+      onTick = (delta) => {
+        // move the displacement map itself
+        displacementSprite.x += 0.45 * delta;
+        displacementSprite.y += 0.65 * delta;
+
+        // move the visible caustics texture
+        overlay.tilePosition.x -= 0.15 * delta;
+        overlay.tilePosition.y += 0.1 * delta;
+      };
+
+      app.ticker.add(onTick);
+    };
+
+    init();
+
+    return () => {
+      disposed = true;
+      if (onMotionChange) {
+        prefersReducedMotion.removeEventListener("change", onMotionChange);
+      }
+      if (onResize && app.renderer) {
+        app.renderer.off("resize", onResize);
+      }
+      if (onTick) {
+        app.ticker.remove(onTick);
+      }
+      app.destroy(true);
+      host.innerHTML = "";
+    };
+  }, []);
+
+  return <div ref={hostRef} className="water-wave-layer" aria-hidden="true" />;
+}      overlay.filters = [displacementFilter];
       app.stage.addChild(overlay);
 
       onResize = () => {
