@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import LogoMark from "../Logo/LogoMark";
@@ -110,7 +110,7 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
     });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (mode === "always") {
       kickoffRef.current = requestAnimationFrame(() => {
         kickoffRef.current = null;

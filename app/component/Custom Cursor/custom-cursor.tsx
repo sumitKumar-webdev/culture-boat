@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 type Point = { x: number; y: number };
 
@@ -8,6 +8,7 @@ const lerp = (from: number, to: number, ease: number) =>
   from + (to - from) * ease;
 
 export const CustomCursor = () => {
+  const [enabled, setEnabled] = useState(true);
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
   const isHoveringRef = useRef(false);
@@ -20,8 +21,49 @@ export const CustomCursor = () => {
   const dotScaleRef = useRef(1);
   const dotScaleTargetRef = useRef(1);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window === "undefined") {
+      return;
+    }
+
+    const pointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+
+    const updateEnabled = () => {
+      const nextEnabled = pointerQuery.matches && !mobileQuery.matches;
+      setEnabled(nextEnabled);
+      document.body.classList.toggle("disable-custom-cursor", !nextEnabled);
+    };
+
+    const addListener = (query: MediaQueryList, handler: () => void) => {
+      if ("addEventListener" in query) {
+        query.addEventListener("change", handler);
+      } else {
+        query.addListener(handler);
+      }
+    };
+
+    const removeListener = (query: MediaQueryList, handler: () => void) => {
+      if ("removeEventListener" in query) {
+        query.removeEventListener("change", handler);
+      } else {
+        query.removeListener(handler);
+      }
+    };
+
+    updateEnabled();
+    addListener(pointerQuery, updateEnabled);
+    addListener(mobileQuery, updateEnabled);
+
+    return () => {
+      removeListener(pointerQuery, updateEnabled);
+      removeListener(mobileQuery, updateEnabled);
+      document.body.classList.remove("disable-custom-cursor");
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!enabled || typeof window === "undefined") {
       return;
     }
 
@@ -29,13 +71,6 @@ export const CustomCursor = () => {
     const ring = ringRef.current;
 
     if (!cursor || !ring) {
-      return;
-    }
-
-    const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)");
-    if (isTouchDevice.matches) {
-      cursor.style.display = "none";
-      ring.style.display = "none";
       return;
     }
 
@@ -205,7 +240,11 @@ export const CustomCursor = () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) {
+    return null;
+  }
 
   return (
     <>
