@@ -1,12 +1,25 @@
 import Image from "next/image";
 import { BrandCarousel } from "../../component/BrandCarousel/BrandCarousel";
+import PhotoDialog from "../../component/PhotoDialog/photo-dialog";
+import VideoDialog from "../../component/VideoDialog/video-dialog";
 import { brandLogos, pageContent } from "../../content/siteData";
 
 export default function page() {
+  const portfolioImages = [
+    { src: "/Mailer/1.jpeg", alt: "Portfolio Item 1" },
+    { src: "/Mailer/4.jpeg", alt: "Portfolio Item 4" },
+    { src: "/Mailer/6.jpeg", alt: "Portfolio Item 6" },
+    { src: "/Mailer/2.jpeg", alt: "Portfolio Item 2" },
+    { src: "/Mailer/5.jpeg", alt: "Portfolio Item 5" },
+    { src: "/Mailer/7.jpeg", alt: "Portfolio Item 7" },
+    { src: "/Mailer/Group.jpeg", alt: "Portfolio Item 3" },
+  ];
+
   return (
     <div
       id="design-content"
-      className="text-white leading-relaxed"
+      className="min-h-screen text-white leading-relaxed"
+      style={{ backgroundImage: "none" }}
     >
       <div className="max-w-6xl mx-auto px-4 lg:px-4">
         <section className="relative mt-20 text-center z-10">
@@ -90,42 +103,12 @@ export default function page() {
           </div>
           <div className="flex flex-col lg:flex-row gap-3 lg:gap-40 justify-center items-stretch">
             <div className="relative overflow-hidden w-full lg:max-w-150 mx-auto lg:mx-0 z-10 flex items-stretch">
-              <button
-                className="w-full focus:outline-none block relative"
-                aria-label="Play video"
-              >
-                <Image
-                  unoptimized
-                  alt="Kalki Fashion"
-                  width={1040}
-                  height={674}
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
-                  src="/Design/Design-image4-1.jpeg"
-                />
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-16 h-16 md:w-20 md:h-20 bg-white/30 rounded-full flex items-center justify-center backdrop-blur-sm">
-                    <svg
-                      className="w-8 h-8 md:w-10 md:h-10 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </button>
+              <VideoDialog
+                thumbnailSrc="/Design/Design-image4-1.jpeg"
+                thumbnailAlt="Kalki Fashion"
+                iframeSrc="https://www.youtube.com/embed/C-4C4VnyZco?si=jM7xCtCv4N92vYhh"
+                iframeTitle="YouTube video player"
+              />
             </div>
             <div className="relative overflow-hidden w-full lg:w-[50%] lg:max-w-87.5 mx-auto lg:mx-0 z-10 flex items-stretch mt-5 md:mt-0">
               <Image
@@ -218,63 +201,63 @@ export default function page() {
           </div>
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-5 items-start justify-center lg:px-4">
             <div className="flex flex-col gap-4 w-full lg:max-w-xl mx-auto lg:mx-0 z-10">
-              <Image
-                unoptimized
-                alt="Portfolio Item 1"
-                width={1625}
-                height={3083}
-                className="w-full h-auto object-contain z-10"
-                src="/Mailer/1.jpeg"
+              <PhotoDialog
+                images={portfolioImages}
+                startIndex={0}
+                title="AMIRAAH"
+                thumbnailSrc="/Mailer/1.jpeg"
+                thumbnailAlt="Portfolio Item 1"
+                imageClassName="z-10"
               />
-              <Image
-                unoptimized
-                alt="Portfolio Item 4"
-                width={1180}
-                height={2650}
-                className="w-full h-auto object-contain z-10"
-                src="/Mailer/4.jpeg"
+              <PhotoDialog
+                images={portfolioImages}
+                startIndex={1}
+                title="AMIRAAH"
+                thumbnailSrc="/Mailer/4.jpeg"
+                thumbnailAlt="Portfolio Item 4"
+                imageClassName="z-10"
               />
-              <Image
-                unoptimized
-                alt="Portfolio Item 6"
-                width={600}
-                height={2616}
-                className="w-full h-auto object-contain z-10"
-                src="/Mailer/6.jpeg"
+              <PhotoDialog
+                images={portfolioImages}
+                startIndex={2}
+                title="AMIRAAH"
+                thumbnailSrc="/Mailer/6.jpeg"
+                thumbnailAlt="Portfolio Item 6"
+                imageClassName="z-10"
               />
             </div>
             <div className="flex flex-col gap-4 w-full lg:max-w-xl mx-auto lg:mx-0 z-10">
-              <Image
-                unoptimized
-                alt="Portfolio Item 2"
-                width={1223}
-                height={1363}
-                className="w-full h-auto object-contain z-10"
-                src="/Mailer/2.jpeg"
+              <PhotoDialog
+                images={portfolioImages}
+                startIndex={3}
+                title="AMIRAAH"
+                thumbnailSrc="/Mailer/2.jpeg"
+                thumbnailAlt="Portfolio Item 2"
+                imageClassName="z-10"
               />
-              <Image
-                unoptimized
-                alt="Portfolio Item 5"
-                width={1080}
-                height={3776}
-                className="w-full h-auto object-contain z-10"
-                src="/Mailer/5.jpeg"
+              <PhotoDialog
+                images={portfolioImages}
+                startIndex={4}
+                title="AMIRAAH"
+                thumbnailSrc="/Mailer/5.jpeg"
+                thumbnailAlt="Portfolio Item 5"
+                imageClassName="z-10"
               />
-              <Image
-                unoptimized
-                alt="Portfolio Item 7"
-                width={1621}
-                height={2587}
-                className="w-full h-auto object-contain z-10"
-                src="/Mailer/7.jpeg"
+              <PhotoDialog
+                images={portfolioImages}
+                startIndex={5}
+                title="AMIRAAH"
+                thumbnailSrc="/Mailer/7.jpeg"
+                thumbnailAlt="Portfolio Item 7"
+                imageClassName="z-10"
               />
-              <Image
-                unoptimized
-                alt="Portfolio Item 3"
-                width={853}
-                height={1930}
-                className="w-full h-auto object-contain z-10"
-                src="/Mailer/Group.jpeg"
+              <PhotoDialog
+                images={portfolioImages}
+                startIndex={6}
+                title="AMIRAAH"
+                thumbnailSrc="/Mailer/Group.jpeg"
+                thumbnailAlt="Portfolio Item 3"
+                imageClassName="z-10"
               />
             </div>
           </div>
@@ -282,7 +265,7 @@ export default function page() {
 
         <section className="z-10">
           <div className="relative w-full py-8">
-            <BrandCarousel items={brandLogos} durationSeconds={36} />
+            <BrandCarousel items={brandLogos} durationSeconds={220} />
           </div>
         </section>
       </div>

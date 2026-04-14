@@ -165,6 +165,7 @@ export const CustomCursor = () => {
         elementUnderCursor?.closest<HTMLElement>("[data-glow]") ?? null;
       setGlowTarget(nextGlowTarget, event);
       setHoverState(isInteractiveTarget(elementUnderCursor));
+
     };
 
     const handleMouseDown = () => {

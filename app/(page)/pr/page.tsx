@@ -2,40 +2,74 @@ import Image from "next/image";
 import { BrandCarousel } from "../../component/BrandCarousel/BrandCarousel";
 import { pageContent } from "../../content/siteData";
 
-const gridImages = Array.from({ length: 20 }, (_, index) => {
-  const id = index + 1;
+type GridMedia = {
+  type: "image" | "video";
+  src: string;
+  alt: string;
+};
+
+const gridImages = Array.from({ length: 21 }, (_, index) => {
+  const id = String(index + 1).padStart(2, "0");
   return {
-    src: `/PR-images/grid/${id}.jpeg`,
-    alt: `Fashion ${id}`,
+    type: "image" as const,
+    src: `/PR-images/concept-direction/concept-direction-${id}.jpeg`,
+    alt: `Concept & direction ${id}`,
   };
 });
 
-const consultancyItems = [
-  { src: "/PR-images/consultancy/1.jpeg", alt: "Creative consultancy 1" },
-  { src: "/PR-images/consultancy/2.jpeg", alt: "Creative consultancy 2" },
-  { src: "/PR-images/consultancy/3.jpeg", alt: "Creative consultancy 3" },
-  { src: "/PR-images/consultancy/1.jpeg", alt: "Creative consultancy 4" },
-  { src: "/PR-images/consultancy/2.jpeg", alt: "Creative consultancy 5" },
-  { src: "/PR-images/consultancy/3.jpeg", alt: "Creative consultancy 6" },
+const gridVideos: GridMedia[] = [
+  {
+    type: "video",
+    src: "/PR-images/grid-videos/grid-video-01.mp4",
+    alt: "Concept video 1",
+  },
+  {
+    type: "video",
+    src: "/PR-images/grid-videos/grid-video-02.mp4",
+    alt: "Concept video 2",
+  },
+  {
+    type: "video",
+    src: "/PR-images/grid-videos/grid-video-03.mp4",
+    alt: "Concept video 3",
+  },
 ];
 
-const influencerItems = [
-  { src: "/PR-images/influencers/1.jpeg", alt: "Influencer 1" },
-  { src: "/PR-images/influencers/2.jpeg", alt: "Influencer 2" },
-  { src: "/PR-images/influencers/3.jpeg", alt: "Influencer 3" },
-  { src: "/PR-images/influencers/1.jpeg", alt: "Influencer 4" },
-  { src: "/PR-images/influencers/2.jpeg", alt: "Influencer 5" },
-  { src: "/PR-images/influencers/3.jpeg", alt: "Influencer 6" },
-];
+const gridMedia: GridMedia[] = [...gridImages];
+// Place videos at varied positions (early, middle, and end)
+gridMedia.splice(3, 0, gridVideos[0]);
+gridMedia.splice(Math.floor(gridMedia.length / 2), 0, gridVideos[1]);
+gridMedia.push(gridVideos[2]);
 
-const stylistItems = [
-  { src: "/PR-images/stylists/1.jpeg", alt: "Stylist 1" },
-  { src: "/PR-images/stylists/2.jpeg", alt: "Stylist 2" },
-  { src: "/PR-images/stylists/3.jpeg", alt: "Stylist 3" },
-  { src: "/PR-images/stylists/1.jpeg", alt: "Stylist 4" },
-  { src: "/PR-images/stylists/2.jpeg", alt: "Stylist 5" },
-  { src: "/PR-images/stylists/3.jpeg", alt: "Stylist 6" },
-];
+const consultancyItems = Array.from({ length: 11 }, (_, index) => {
+  const id = String(index + 1).padStart(2, "0");
+  return {
+    src: `/PR-images/creative-consultancy/creative-consultancy-${id}.jpeg`,
+    alt: `Creative consultancy ${id}`,
+  };
+});
+
+const influencerItems = Array.from({ length: 11 }, (_, index) => {
+  const id = String(index + 1).padStart(2, "0");
+  return {
+    src: `/PR-images/influencers/influencers-${id}.jpeg`,
+    alt: `Product ${index + 1}`,
+  };
+});
+
+const stylistItems = Array.from({ length: 7 }, (_, index) => {
+  const id = String(index + 1).padStart(2, "0");
+  return {
+    src: `/PR-images/stylists/stylists-${id}.jpeg`,
+    alt: `Stylist ${id}`,
+  };
+});
+
+const duplicateItems = <T,>(items: T[]) => [...items, ...items];
+const consultancyCarouselItems = duplicateItems(consultancyItems);
+const influencerCarouselItems = duplicateItems(influencerItems);
+const doubled = duplicateItems(stylistItems);
+const stylistCarouselItems = duplicateItems(doubled);
 
 export default function PrPage() {
   return (
@@ -159,19 +193,34 @@ export default function PrPage() {
 
           <section className="px-4 sm:px-4 md:px-6 lg:px-10 mt-6 md:mt-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mb-6">
-              {gridImages.map((image, index) => (
+              {gridMedia.map((media, index) => (
                 <div
-                  key={image.src}
+                  key={media.src}
                   className="col-span-1 w-full flex justify-center"
                 >
-                  <Image
-                    alt={image.alt}
-                    src={image.src}
-                    width={400}
-                    height={400}
-                    className="object-contain w-full h-auto"
-                    loading={index < 8 ? "eager" : "lazy"}
-                  />
+                  <div className="relative w-full max-w-[420px] aspect-[3/4] overflow-hidden">
+                    {media.type === "video" ? (
+                      <video
+                        className="h-full w-full object-cover"
+                        src={media.src}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        aria-label={media.alt}
+                      />
+                    ) : (
+                      <Image
+                        alt={media.alt}
+                        src={media.src}
+                        fill
+                        sizes="(max-width: 768px) 45vw, 420px"
+                        className="object-cover"
+                        loading={index < 8 ? "eager" : "lazy"}
+                      />
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -192,9 +241,13 @@ export default function PrPage() {
               </div>
               <div className="relative w-full py-6">
                 <BrandCarousel
-                  items={consultancyItems}
-                  durationSeconds={26}
+                  items={consultancyCarouselItems}
+                  durationSeconds={600}
                   direction="left"
+                  className="bg-white"
+                  itemSizeClassName="w-[250px] h-[300px]"
+                  itemFrameClassName="bg-white"
+                  minItems={24}
                 />
               </div>
 
@@ -205,9 +258,13 @@ export default function PrPage() {
               </div>
               <div className="relative w-full py-6">
                 <BrandCarousel
-                  items={influencerItems}
-                  durationSeconds={22}
+                  items={influencerCarouselItems}
+                  durationSeconds={600}
                   direction="right"
+                  className="bg-white"
+                  itemSizeClassName="w-[250px] h-[300px]"
+                  itemFrameClassName="bg-white"
+                  minItems={24}
                 />
               </div>
 
@@ -218,9 +275,13 @@ export default function PrPage() {
               </div>
               <div className="relative w-full py-6">
                 <BrandCarousel
-                  items={stylistItems}
-                  durationSeconds={30}
+                  items={stylistCarouselItems}
+                  durationSeconds={600}
                   direction="left"
+                  className="bg-white"
+                  itemSizeClassName="w-[250px] h-[300px]"
+                  itemFrameClassName="bg-white"
+                  minItems={24}
                 />
               </div>
             </div>

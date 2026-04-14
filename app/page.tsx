@@ -11,39 +11,39 @@ const textItems: HomeClientTextItem[] = [
 
 const leftImages: HomeClientImage[] = [
   {
-    src: "/Design/Design-image1.jpeg",
-    alt: "Editorial fashion portrait",
+    src: "/home/home-01.jpeg",
+    alt: "Model in embroidered lehenga under warm spotlight",
   },
   {
-    src: "/PR-images/PR_top.jpeg",
-    alt: "Cultural celebration scene",
+    src: "/home/home-02.jpeg",
+    alt: "Outdoor menswear portrait in patterned shirt",
   },
   {
-    src: "/About/About-main.jpeg",
-    alt: "Studio atmosphere",
+    src: "/home/home-03.jpeg",
+    alt: "Casual menswear by rocky lakeside",
   },
   {
-    src: "/Design/Design-image3-1.jpeg",
-    alt: "Fashion styling detail",
+    src: "/home/home-04.jpeg",
+    alt: "Chocolate cake styled on a pedestal",
   },
 ];
 
 const rightImages: HomeClientImage[] = [
   {
-    src: "/Design/Design-image2.jpeg",
-    alt: "Product styling",
+    src: "/home/home-05.jpeg",
+    alt: "Bride-inspired lehenga on train platform",
   },
   {
-    src: "/Design/Design-image3-1.jpeg",
-    alt: "Fashion photography",
+    src: "/home/home-06.jpeg",
+    alt: "Portrait in ornate purple attire",
   },
   {
-    src: "/Design/Design-image4-1.jpeg",
-    alt: "Campaign still",
+    src: "/home/home-07.jpeg",
+    alt: "Seated model framed by carved stone arch",
   },
   {
-    src: "/Mailer/2.jpeg",
-    alt: "Print layout detail",
+    src: "/home/home-02.jpeg",
+    alt: "Outdoor menswear portrait in patterned shirt",
   },
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 
 type BrandLogo = {
@@ -13,20 +13,45 @@ type BrandCarouselProps = {
   items: BrandLogo[];
   durationSeconds?: number;
   direction?: "left" | "right";
+  className?: string;
+  itemSizeClassName?: string;
+  itemFrameClassName?: string;
+  imageClassName?: string;
+  minItems?: number;
 };
 
 export function BrandCarousel({
   items,
   durationSeconds = 40,
   direction = "left",
+  className,
+  itemSizeClassName = "w-[170px] h-[150px]",
+  itemFrameClassName,
+  imageClassName,
+  minItems = 24,
 }: BrandCarouselProps) {
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const pausedRef = useRef(false);
   const offsetRef = useRef(0);
   const lastTimeRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
   const halfWidthRef = useRef(0);
-  const doubled = [...items, ...items];
+  const speedFactorRef = useRef(1);
+  const speedTargetRef = useRef(1);
+
+  const baseCount = items.length;
+  const repeatMultiplier = baseCount
+    ? Math.max(6, Math.ceil(minItems / baseCount))
+    : 1;
+
+  const sequenceItems = useMemo(() => {
+    if (!baseCount) return [];
+    return Array.from(
+      { length: baseCount * repeatMultiplier },
+      (_, index) => items[index % baseCount],
+    );
+  }, [items, baseCount, repeatMultiplier]);
+
+  const doubled = [...sequenceItems, ...sequenceItems];
 
   useEffect(() => {
     const track = trackRef.current;
@@ -34,13 +59,13 @@ export function BrandCarousel({
       return;
     }
 
-    const updateWidth = () => {
+    const updateWidths = () => {
       halfWidthRef.current = track.scrollWidth / 2;
     };
 
-    updateWidth();
+    updateWidths();
 
-    const resizeObserver = new ResizeObserver(updateWidth);
+    const resizeObserver = new ResizeObserver(updateWidths);
     resizeObserver.observe(track);
 
     const tick = (time: number) => {
@@ -50,8 +75,10 @@ export function BrandCarousel({
       const delta = (time - lastTimeRef.current) / 1000;
       lastTimeRef.current = time;
       const halfWidth = halfWidthRef.current;
-      if (halfWidth > 0 && !pausedRef.current) {
-        const speed = halfWidth / durationSeconds;
+      if (halfWidth > 0) {
+        speedFactorRef.current +=
+          (speedTargetRef.current - speedFactorRef.current) * 0.12;
+        const speed = (halfWidth / durationSeconds) * speedFactorRef.current;
         const directionMultiplier = direction === "right" ? 1 : -1;
         offsetRef.current += speed * delta * directionMultiplier;
         if (Math.abs(offsetRef.current) >= halfWidth) {
@@ -70,29 +97,31 @@ export function BrandCarousel({
       }
       resizeObserver.disconnect();
     };
-  }, [durationSeconds, items.length, direction]);
+  }, [durationSeconds, sequenceItems.length, direction]);
 
   return (
     <div
-      className="brand-marquee relative overflow-hidden"
+      className={`brand-marquee relative overflow-hidden ${className ?? ""}`}
       onMouseEnter={() => {
-        pausedRef.current = true;
+        speedTargetRef.current = 0;
       }}
       onMouseLeave={() => {
-        pausedRef.current = false;
+        speedTargetRef.current = 1;
       }}
     >
       <div ref={trackRef} className="brand-marquee__track flex">
         {doubled.map((logo, index) => {
           const content = (
             <div className="flex items-center justify-center px-0 no-water-effect">
-              <div className="w-[170px] h-[150px] flex items-center justify-center p-3 hover:shadow-2xl transition-all duration-300">
+              <div
+                className={`${itemSizeClassName} flex items-center justify-center p-3 transition-all duration-300 ${itemFrameClassName ?? ""}`}
+              >
                 <Image
                   alt={logo.alt}
                   width={2200}
                   height={2240}
                   unoptimized
-                  className="w-[170px] h-[150px] object-contain no-water-effect"
+                  className={`${itemSizeClassName} object-contain no-water-effect ${imageClassName ?? ""}`}
                   src={logo.src}
                 />
               </div>
