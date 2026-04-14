@@ -168,7 +168,7 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
             <LogoMark className="route-loader__logo absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-10 left-1/2 flex w-[min(260px,70vw)] -translate-x-1/2 flex-col items-center gap-3">
               <motion.div
-                className="w-[4ch] text-center text-xs tabular-nums tracking-wide text-[#e8ddcc]/80"
+                className="w-[4ch] text-center text-xs tabular-nums tracking-wide text-white/80"
                 animate={{ opacity: active ? 1 : 0 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >

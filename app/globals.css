@@ -128,6 +128,18 @@ body {
   --glow-strength: 1;
 }
 
+.social-scroll .group:hover .ring-text {
+  --glow-strength: 1;
+  background-image: linear-gradient(#ffffff, #ffffff),
+    radial-gradient(
+      circle at var(--glow-x) var(--glow-y),
+      rgba(255, 255, 255, 1) 0,
+      rgba(255, 255, 255, 1) var(--glow-inner),
+      rgba(255, 255, 255, 0.85) var(--glow-mid),
+      rgba(255, 255, 255, 0) var(--glow-outer)
+    );
+}
+
 @media (hover: none) and (pointer: coarse) {
   .customCursor {
     display: none;
@@ -180,7 +192,7 @@ h6 {
   flex-direction: column;
   align-items: center;
   gap: 18px;
-  color: #e8ddcc;
+  color: #ffffffd4;
 }
 
 .route-loader__logo {

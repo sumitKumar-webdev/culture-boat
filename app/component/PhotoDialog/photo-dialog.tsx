@@ -65,73 +65,118 @@ export default function PhotoDialog({
 
   const dialog = open && images.length ? (
     <div
-      className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4 py-8"
+      className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/70 backdrop-blur-sm px-3 py-6 md:px-6 md:py-10"
       role="dialog"
       aria-modal="true"
       aria-label={title}
       onClick={() => setOpen(false)}
     >
       <div
-        className="relative w-full max-w-6xl rounded-[28px] bg-[#0b0b0c] shadow-2xl ring-1 ring-white/10"
+        className="relative z-10 w-full max-w-7xl h-[95vh] flex flex-col bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-3 md:p-6"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center justify-center border-b border-white/10 px-6 py-4">
-          <div className="text-center text-lg tracking-[0.32em] uppercase text-white">
+        <div className="flex justify-center items-center mb-2 md:mb-4 relative">
+          <h2 className="text-xl md:text-3xl lg:text-4xl font-semibold text-white tracking-wide text-center">
             {title}
-          </div>
+          </h2>
           <button
             type="button"
             ref={closeButtonRef}
-            className="absolute right-5 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/80 transition hover:text-white"
+            className="absolute top-0 right-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/25 hover:scale-110 backdrop-blur-md transition-all group"
             onClick={() => setOpen(false)}
             aria-label="Close gallery"
           >
-            ×
+            <svg
+              className="w-5 h-5 md:w-6 md:h-6 text-white group-hover:rotate-90 transition-transform duration-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
-        <div className="relative px-6 pb-4 pt-6">
-          <div className="relative overflow-hidden rounded-2xl bg-black/40">
-            <div className="relative mx-auto max-h-[62vh] w-full">
+        <div className="relative flex-1 rounded-2xl overflow-hidden bg-gradient-to-br from-black/40 to-black/20 backdrop-blur-sm group cursor-pointer">
+          <div className="absolute inset-0 flex items-center justify-center p-2 md:p-4">
+            <div className="relative w-full h-full">
               <Image
                 unoptimized
                 alt={active?.alt ?? "Gallery image"}
                 src={active?.src ?? thumbnailSrc}
-                width={1800}
-                height={1200}
-                className="h-full w-full object-contain"
+                fill
+                sizes="100vw"
+                className="object-contain drop-shadow-2xl pointer-events-none"
               />
             </div>
-
-            <button
-              type="button"
-              className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition hover:bg-white/20 hover:text-white"
-              onClick={() => setIndex((prev) => (prev - 1 + images.length) % images.length)}
-              aria-label="Previous image"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition hover:bg-white/20 hover:text-white"
-              onClick={() => setIndex((prev) => (prev + 1) % images.length)}
-              aria-label="Next image"
-            >
-              ›
-            </button>
           </div>
 
-          <div className="mt-4 flex items-center justify-center text-sm text-white/70">
-            {index + 1} / {images.length}
-          </div>
+          <button
+            type="button"
+            className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-xl flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 z-20 border border-white/20"
+            onClick={() => setIndex((prev) => (prev - 1 + images.length) % images.length)}
+            aria-label="Previous image"
+          >
+            <svg
+              className="w-6 h-6 md:w-7 md:h-7 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-xl flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 z-20 border border-white/20"
+            onClick={() => setIndex((prev) => (prev + 1) % images.length)}
+            aria-label="Next image"
+          >
+            <svg
+              className="w-6 h-6 md:w-7 md:h-7 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
 
-          <div className="mt-4 flex items-center justify-center gap-2 overflow-x-auto pb-2">
+          <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {images.map((_, idx) => (
+              <button
+                key={`dot-${idx}`}
+                type="button"
+                className={`transition-all duration-300 rounded-full ${
+                  idx === index
+                    ? "w-8 md:w-10 h-2 md:h-2.5 bg-white"
+                    : "w-2 md:w-2.5 h-2 md:h-2.5 bg-white/40 hover:bg-white/60"
+                }`}
+                onClick={() => setIndex(idx)}
+                aria-label={`Go to image ${idx + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-2 text-center">
+          <p className="text-white/80 text-sm md:text-base font-medium">
+            <span className="text-white font-semibold">{index + 1}</span>
+            <span className="mx-2 text-white/50">/</span>
+            <span className="text-white/60">{images.length}</span>
+          </p>
+        </div>
+
+        <div className="mt-2 md:mt-3 overflow-x-auto no-scrollbar">
+          <div className="flex gap-2 md:gap-3 pb-2 justify-center">
             {images.map((image, idx) => (
               <button
                 key={`${image.src}-${idx}`}
                 type="button"
-                className={`relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl border transition ${
-                  idx === index ? "border-white" : "border-white/10 hover:border-white/40"
+                className={`flex-shrink-0 w-14 h-14 md:w-20 md:h-20 rounded-xl overflow-hidden transition-all duration-300 ${
+                  idx === index
+                    ? "ring-2 ring-white shadow-lg shadow-white/50 scale-110"
+                    : "opacity-60 hover:opacity-100 ring-1 ring-white/20"
                 }`}
                 onClick={() => setIndex(idx)}
                 aria-label={`Go to image ${idx + 1}`}
@@ -141,8 +186,8 @@ export default function PhotoDialog({
                   alt={image.alt}
                   src={image.src}
                   width={160}
-                  height={120}
-                  className="h-full w-full object-cover"
+                  height={160}
+                  className="object-cover w-full h-full"
                 />
               </button>
             ))}
