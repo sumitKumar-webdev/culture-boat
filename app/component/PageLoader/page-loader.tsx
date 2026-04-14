@@ -2,7 +2,6 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { usePathname } from "next/navigation";
 import LogoMark from "../Logo/LogoMark";
 
 type PageLoaderProps = {
@@ -15,9 +14,9 @@ const AUTO_HIDE_DELAY = 400;
 const IMAGE_TIMEOUT = 2800;
 
 export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
-  const pathname = usePathname();
   const [active, setActive] = useState(true);
   const [progress, setProgress] = useState(START_VALUE);
+
   const progressRef = useRef(START_VALUE);
   const kickoffRef = useRef<number | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -28,10 +27,12 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
       cancelAnimationFrame(kickoffRef.current);
       kickoffRef.current = null;
     }
+
     if (rafRef.current !== null) {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     }
+
     if (timeoutRef.current !== null) {
       window.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -46,7 +47,7 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
   const animateProgress = (
     target: number,
     duration: number,
-    fromOverride?: number,
+    fromOverride?: number
   ) => {
     const start = performance.now();
     const from = fromOverride ?? progressRef.current;
@@ -57,7 +58,9 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
         const t = elapsed / duration;
         const eased = 1 - Math.pow(1 - t, 3);
         const nextValue = Math.round(from + (target - from) * eased);
+
         setProgressValue(nextValue);
+
         if (elapsed < duration) {
           rafRef.current = requestAnimationFrame(tick);
         } else {
@@ -72,12 +75,12 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
   const waitForImages = async () => {
     const images = Array.from(document.images);
     const pending = images.filter((img) => !img.complete);
-    if (!pending.length) {
-      return;
-    }
+
+    if (!pending.length) return;
 
     await new Promise<void>((resolve) => {
       let remaining = pending.length;
+
       const done = () => {
         remaining -= 1;
         if (remaining <= 0) resolve();
@@ -92,58 +95,59 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
     });
   };
 
-  const startLoading = () => {
+  const startLoading = async () => {
     stopTimers();
     setProgressValue(START_VALUE);
     setActive(true);
+
     void animateProgress(92, 1200, START_VALUE);
 
-    requestAnimationFrame(async () => {
-      await waitForImages();
-      stopTimers();
-      await animateProgress(FINISH_VALUE, 500);
-      if (mode === "auto") {
-        timeoutRef.current = window.setTimeout(() => {
-          setActive(false);
-        }, AUTO_HIDE_DELAY);
-      }
-    });
+    await waitForImages();
+
+    stopTimers();
+    await animateProgress(FINISH_VALUE, 500);
+
+    if (mode === "auto") {
+      timeoutRef.current = window.setTimeout(() => {
+        setActive(false);
+      }, AUTO_HIDE_DELAY);
+    }
   };
 
   useLayoutEffect(() => {
-    if (mode === "always") {
-      kickoffRef.current = requestAnimationFrame(() => {
-        kickoffRef.current = null;
-        startLoading();
-      });
-      return () => stopTimers();
-    }
     kickoffRef.current = requestAnimationFrame(() => {
       kickoffRef.current = null;
-      startLoading();
+      void startLoading();
     });
-    return () => stopTimers();
-  }, [pathname, mode]);
+
+    return () => {
+      stopTimers();
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    };
+  }, [mode]);
 
   useLayoutEffect(() => {
-    if (mode === "auto") {
-      const scrollbarWidth =
-        typeof window !== "undefined"
-          ? window.innerWidth - document.documentElement.clientWidth
-          : 0;
-      if (active) {
-        document.body.style.overflow = "hidden";
-        document.body.style.paddingRight =
-          scrollbarWidth > 0 ? `${scrollbarWidth}px` : "";
-      } else {
-        document.body.style.overflow = "";
-        document.body.style.paddingRight = "";
-      }
-      return () => {
-        document.body.style.overflow = "";
-        document.body.style.paddingRight = "";
-      };
+    if (mode !== "auto") return;
+
+    const scrollbarWidth =
+      typeof window !== "undefined"
+        ? window.innerWidth - document.documentElement.clientWidth
+        : 0;
+
+    if (active) {
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight =
+        scrollbarWidth > 0 ? `${scrollbarWidth}px` : "";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
     }
+
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    };
   }, [active, mode]);
 
   const clampedProgress = Math.min(Math.max(progress, 0), 100);
@@ -153,8 +157,8 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
       {active && (
         <motion.div
           className="route-loader fixed inset-0 z-[100] bg-[#1c1917]"
-          initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
@@ -166,6 +170,7 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             <LogoMark className="route-loader__logo absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+
             <div className="absolute bottom-10 left-1/2 flex w-[min(260px,70vw)] -translate-x-1/2 flex-col items-center gap-3">
               <motion.div
                 className="w-[4ch] text-center text-xs tabular-nums tracking-wide text-white/80"
