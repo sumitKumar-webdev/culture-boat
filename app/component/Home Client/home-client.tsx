@@ -39,7 +39,6 @@ export default function HomePageClient({
   const imageHeightRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const cursorPosRef = useRef({ x: -9999, y: -9999 });
-  // Track whether bounds have been initialised at least once
   const initialisedRef = useRef(false);
 
   useLayoutEffect(() => {
@@ -61,22 +60,21 @@ export default function HomePageClient({
       const progressRange = maxX - minX || 1;
       const ringProgress =
         ((maxX - offset) / progressRange) * (textItems.length - 1);
+
       const isMobile = window.innerWidth < 640;
       const isTablet = !isMobile && window.innerWidth < 768;
-      // On mobile the arc needs to be much wider so off-screen nodes are
-      // genuinely off-screen and the front node feels bold/centred.
+
       const horizontalSpread = isMobile
-        ? window.innerWidth * 0.62 // was 0.32 — push side nodes further out
+        ? window.innerWidth * 0.62
         : isTablet
           ? window.innerWidth * 0.5
           : window.innerWidth * 0.54;
-      // More depth on mobile so the Z-push is visible in the perspective
+
       const depthSpread = isMobile ? 420 : isTablet ? 300 : 380;
       const baseZ = isMobile ? 80 : 240;
-      // Higher maxAngle + angleStep = steeper arc = nodes leave screen quickly
       const maxAngle = isMobile ? 1.45 : isTablet ? 1.15 : 1.05;
       const angleStep = isMobile ? 1.45 : isTablet ? 0.9 : 0.8;
-      const sizeScale = isMobile ? 0.62 : 0.62;
+      const sizeScale = 0.62;
 
       textNodes.forEach((node, index) => {
         const distanceFromFront = index - ringProgress;
@@ -87,29 +85,27 @@ export default function HomePageClient({
         const zOffset = baseZ + distanceMagnitude * depthSpread;
         const cosA = Math.cos(clampedAngle);
         const sinA = Math.sin(clampedAngle);
+
         const matrix = `matrix3d(${cosA.toFixed(6)},0,${sinA.toFixed(6)},0,0,1,0,0,${(-sinA).toFixed(6)},0,${cosA.toFixed(6)},0,${xOffset.toFixed(3)},0,${zOffset.toFixed(3)},1)`;
 
         const centerShrink = 0.94;
         const edgeShrink = 0.9;
         const sizeTaper =
           centerShrink - (centerShrink - edgeShrink) * distanceMagnitude;
+
         node.style.transform = `translate(-50%, -50%) scale(${sizeScale * sizeTaper}) ${matrix}`;
-        // blur() forces a new offscreen rasterization surface per frame — this is what
-        // causes the pixel shimmer / crawl at arc extremes. Depth is already conveyed
-        // by xOffset + zOffset so the blur adds nothing meaningful.
         node.style.filter = "none";
-        // node.style.opacity = `1`;
         node.style.zIndex = `${100 - Math.round(distanceMagnitude * 12)}`;
         node.style.pointerEvents = "none";
       });
 
-      // Reveal only after bounds are correct (i.e. after first real measure)
       if (initialisedRef.current) {
         container.style.opacity = "1";
       }
 
       const leftOffset = imageOffset - baseOffset - phaseShift;
       const rightOffset = -imageOffset * 1.05 + baseOffset + phaseShift;
+
       leftImagesNode.style.transform = `translate3d(0, ${leftOffset}px, 0)`;
       rightImagesNode.style.transform = `translate3d(0, ${rightOffset}px, 0)`;
       leftImagesNode.style.maxHeight = `${imageHeight}px`;
@@ -127,7 +123,7 @@ export default function HomePageClient({
         const distance = Math.hypot(x - centerX, y - centerY);
         const intensity = Math.max(0, 1 - distance / maxDistance);
         const glowSize = Math.round(40 * intensity);
-        const glowOpacity = (1 * intensity).toFixed(3);
+        const glowOpacity = intensity.toFixed(3);
 
         node.style.setProperty("--glow", `${glowSize}`);
         node.style.setProperty("--glow-opacity", glowOpacity);
@@ -138,17 +134,15 @@ export default function HomePageClient({
       const items = Array.from(container.children) as HTMLDivElement[];
       if (!items.length) return;
 
-      // Larger step on mobile = more scroll distance between nodes =
-      // neighbouring node is off-screen when current one is centred.
       const step =
         window.innerWidth < 640 ? 380 : window.innerWidth < 768 ? 280 : 360;
+
       const maxX = 0;
       const minX = -step * (items.length - 1);
 
       boundsRef.current = { minX, maxX };
       imageHeightRef.current = leftImagesNode.scrollHeight;
 
-      // Clamp current offsets to new bounds
       targetScrollOffsetRef.current = Math.max(
         minX,
         Math.min(
@@ -156,6 +150,7 @@ export default function HomePageClient({
           initialisedRef.current ? targetScrollOffsetRef.current : maxX,
         ),
       );
+
       renderedScrollOffsetRef.current = Math.max(
         minX,
         Math.min(
@@ -164,7 +159,6 @@ export default function HomePageClient({
         ),
       );
 
-      // Mark as initialised BEFORE applyPosition so the reveal fires
       initialisedRef.current = true;
 
       applyPosition(renderedScrollOffsetRef.current);
@@ -175,33 +169,38 @@ export default function HomePageClient({
 
     const animate = () => {
       const { minX, maxX } = boundsRef.current;
+
       targetScrollOffsetRef.current = Math.max(
         minX,
         Math.min(maxX, targetScrollOffsetRef.current),
       );
+
       const delta =
         targetScrollOffsetRef.current - renderedScrollOffsetRef.current;
+
       renderedScrollOffsetRef.current += delta * 0.12;
+
       applyPosition(renderedScrollOffsetRef.current);
+
       if (!glowNodes.length) {
         glowNodes = Array.from(
           document.querySelectorAll<HTMLElement>("[data-glow]"),
         );
       }
+
       if (glowNodes.length) {
         applyGlow(glowNodes);
       }
+
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    const updateFromDelta = (delta: number) => {
-      targetScrollOffsetRef.current -= delta * 1.35;
+    const updateFromDelta = (delta: number, multiplier = 1.35) => {
+      targetScrollOffsetRef.current -= delta * multiplier;
     };
 
     let touchStartX = 0;
     let touchStartY = 0;
-    // Track whether the gesture is confirmed horizontal on mobile
-    let touchDirectionLocked: "horizontal" | "vertical" | null = null;
 
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault();
@@ -211,29 +210,27 @@ export default function HomePageClient({
     const handleTouchStart = (event: TouchEvent) => {
       touchStartX = event.touches[0]?.clientX ?? 0;
       touchStartY = event.touches[0]?.clientY ?? 0;
-      touchDirectionLocked = null; // reset on every new touch
     };
 
     const handleTouchMove = (event: TouchEvent) => {
       const touchX = event.touches[0]?.clientX ?? 0;
       const touchY = event.touches[0]?.clientY ?? 0;
+
       const deltaX = touchStartX - touchX;
       const deltaY = touchStartY - touchY;
+
       const absX = Math.abs(deltaX);
       const absY = Math.abs(deltaY);
 
-      // Lock direction on first significant move (prevents jitter / mis-fires)
-      if (touchDirectionLocked === null && (absX > 4 || absY > 4)) {
-        touchDirectionLocked = absX >= absY ? "horizontal" : "vertical";
-      }
+      const isVertical = absY > absX;
+      const dominantDelta = isVertical ? deltaY : deltaX;
+      const multiplier = isVertical ? 1.1 : 1.35;
 
-      if (touchDirectionLocked === "horizontal") {
-        event.preventDefault();
-        updateFromDelta(deltaX);
-        touchStartX = touchX;
-        touchStartY = touchY;
-      }
-      // vertical — let the browser handle it normally
+      event.preventDefault();
+      updateFromDelta(dominantDelta, multiplier);
+
+      touchStartX = touchX;
+      touchStartY = touchY;
     };
 
     const handleResize = () => {
@@ -244,13 +241,9 @@ export default function HomePageClient({
       cursorPosRef.current = { x: event.clientX, y: event.clientY };
     };
 
-    // ── Key fix: measure FIRST, then start the animation loop ──
-    // This guarantees the first applyPosition call has correct bounds,
-    // so the text never renders in a "wrong" state before being revealed.
     measure();
     rafRef.current = requestAnimationFrame(animate);
 
-    // One deferred re-measure handles fonts / images shifting layout
     settleTimer = window.setTimeout(() => {
       measure();
     }, 160);
@@ -259,11 +252,13 @@ export default function HomePageClient({
     window.addEventListener("touchstart", handleTouchStart, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: false });
     window.addEventListener("resize", handleResize);
+
     const visualViewport = window.visualViewport;
     if (visualViewport) {
       visualViewport.addEventListener("resize", handleResize);
       visualViewport.addEventListener("scroll", handleResize);
     }
+
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
@@ -274,16 +269,18 @@ export default function HomePageClient({
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("resize", handleResize);
+
       if (visualViewport) {
         visualViewport.removeEventListener("resize", handleResize);
         visualViewport.removeEventListener("scroll", handleResize);
       }
+
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [textItems.length]);
 
   return (
-    <div className="relative flex h-svh w-full items-center justify-center overflow-hidden">
+    <div className="relative flex h-svh w-full items-center justify-center overflow-hidden touch-none">
       <section className="relative z-20 flex h-full w-full items-center justify-center">
         <section className="relative z-20 flex h-full w-full items-center justify-center font-mono">
           <div
@@ -297,7 +294,7 @@ export default function HomePageClient({
               {textItems.map((item) => (
                 <div
                   key={item.label}
-                  className="absolute top-1/2 left-1/2 w-fit whitespace-nowrap text-center backface-hidden transform-3d will-change-transform ring-text"
+                  className="absolute left-1/2 top-1/2 w-fit whitespace-nowrap text-center backface-hidden transform-3d will-change-transform ring-text"
                 >
                   <Link
                     href={item.href}
@@ -316,7 +313,9 @@ export default function HomePageClient({
           <div
             ref={leftImgRef}
             className="flex w-[48%] flex-col items-end justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
-            style={{ transform: `translate3d(0, ${-baseOffset - phaseShift}px, 0)` }}
+            style={{
+              transform: `translate3d(0, ${-baseOffset - phaseShift}px, 0)`,
+            }}
           >
             {leftImages.map((image) => (
               <ImageCard key={image.alt} src={image.src} alt={image.alt} />
@@ -326,7 +325,9 @@ export default function HomePageClient({
           <div
             ref={rightImgRef}
             className="flex w-[48%] flex-col items-start justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
-            style={{ transform: `translate3d(0, ${baseOffset + phaseShift}px, 0)` }}
+            style={{
+              transform: `translate3d(0, ${baseOffset + phaseShift}px, 0)`,
+            }}
           >
             {rightImages.map((image) => (
               <ImageCard key={image.alt} src={image.src} alt={image.alt} />
@@ -335,7 +336,7 @@ export default function HomePageClient({
         </div>
       </section>
 
-      <p className="absolute bottom-15 z-20 tracking-[0.08em] text-white/80 max-[640px]:bottom-12 max-[640px]:text-[1rem] font-semibold">
+      <p className="absolute bottom-15 z-20 font-semibold tracking-[0.08em] text-white/80 max-[640px]:bottom-12 max-[640px]:text-[1rem]">
         <span
           data-glow
           className="ring-text inline-block cursor-none px-2 py-1"
