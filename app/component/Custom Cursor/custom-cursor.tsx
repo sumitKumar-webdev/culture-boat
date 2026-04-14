@@ -35,19 +35,30 @@ export const CustomCursor = () => {
       document.body.classList.toggle("disable-custom-cursor", !nextEnabled);
     };
 
+    type LegacyMediaQueryList = MediaQueryList & {
+      addListener?: (listener: () => void) => void;
+      removeListener?: (listener: () => void) => void;
+    };
+
     const addListener = (query: MediaQueryList, handler: () => void) => {
-      if ("addEventListener" in query) {
+      if (typeof query.addEventListener === "function") {
         query.addEventListener("change", handler);
-      } else {
-        query.addListener(handler);
+        return;
+      }
+      const legacy = query as LegacyMediaQueryList;
+      if (typeof legacy.addListener === "function") {
+        legacy.addListener(handler);
       }
     };
 
     const removeListener = (query: MediaQueryList, handler: () => void) => {
-      if ("removeEventListener" in query) {
+      if (typeof query.removeEventListener === "function") {
         query.removeEventListener("change", handler);
-      } else {
-        query.removeListener(handler);
+        return;
+      }
+      const legacy = query as LegacyMediaQueryList;
+      if (typeof legacy.removeListener === "function") {
+        legacy.removeListener(handler);
       }
     };
 

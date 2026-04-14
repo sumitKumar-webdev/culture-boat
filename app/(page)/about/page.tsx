@@ -14,7 +14,6 @@ export default function AboutPage() {
             <div className="md:w-1/2">
               <h1
                 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-5 md:mb-8 leading-tight md:leading-snug"
-                style={{ filter: "url(#textWaterFilter)" }}
               >
                 Everybody loves a <br className="hidden md:block" />
                 good story and we <br className="hidden md:block" />
@@ -29,7 +28,6 @@ export default function AboutPage() {
                     href={link.href}
                     target="_blank"
                     rel="noreferrer"
-                    style={{ filter: "url(#textWaterFilter)" }}
                   >
                     {link.label}
                   </a>
@@ -45,7 +43,6 @@ export default function AboutPage() {
                 unoptimized
                 sizes="(max-width: 768px) 90vw, 50vw"
                 className="object-cover opacity-90"
-                style={{ filter: "url(#waterFilter)" }}
               />
               <div className="absolute top-1/2 -left-4 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 opacity-70">
                 <div className="absolute top-0 left-0 w-3 h-3 md:w-4 md:h-4 border-t-2 border-l-2 border-white" />

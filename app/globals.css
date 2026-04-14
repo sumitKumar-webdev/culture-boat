@@ -70,16 +70,6 @@ body {
   display: none !important;
 }
 
-body.disable-custom-cursor {
-  cursor: auto;
-}
-
-body.disable-custom-cursor *,
-body.disable-custom-cursor *::before,
-body.disable-custom-cursor *::after {
-  cursor: auto !important;
-}
-
 .video-dialog-cursor,
 .video-dialog-cursor * {
   cursor: auto !important;
