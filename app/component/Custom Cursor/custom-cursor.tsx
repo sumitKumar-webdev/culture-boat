@@ -138,8 +138,8 @@ export const CustomCursor = () => {
     };
 
     const update = () => {
-      ringPosRef.current.x = lerp(ringPosRef.current.x, targetPosRef.current.x, 0.08);
-      ringPosRef.current.y = lerp(ringPosRef.current.y, targetPosRef.current.y, 0.08);
+      ringPosRef.current.x = lerp(ringPosRef.current.x, targetPosRef.current.x, 0.12);
+      ringPosRef.current.y = lerp(ringPosRef.current.y, targetPosRef.current.y, 0.12);
       ringScaleRef.current = lerp(ringScaleRef.current, ringScaleTargetRef.current, 0.18);
       dotScaleRef.current = lerp(dotScaleRef.current, dotScaleTargetRef.current, 0.25);
 

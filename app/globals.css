@@ -6,6 +6,9 @@
   --scrollbar-track: #142237df;
   --scrollbar-thumb: #243b5b;
   --scrollbar-thumb-hover: #374151;
+  --water-bg-opacity: 0.7;
+  --water-bg-z: 0;
+  --app-shell-z: 10;
 }
 
 @theme inline {
@@ -86,12 +89,55 @@ body {
 
 .grid-bg {
   background-color: #27221f;
-  background-image: linear-gradient(145deg, #2f2a27 0%, #26211e 55%, #1d1917 100%),
+  background-image:
+    linear-gradient(145deg, #2f2a27 0%, #26211e 55%, #1d1917 100%),
     linear-gradient(rgba(255, 255, 255, 0.085) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.085) 1px, transparent 1px);
-  background-size: cover, 48px 48px, 48px 48px;
+  background-size:
+    cover,
+    48px 48px,
+    48px 48px;
   background-attachment: fixed;
   background-blend-mode: normal, soft-light, soft-light;
+}
+
+.app-water-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--water-bg-z);
+  pointer-events: none;
+  opacity: var(--water-bg-opacity);
+  transition: opacity 400ms ease;
+  background: transparent;
+}
+
+.app-shell {
+  position: relative;
+  z-index: var(--app-shell-z);
+  min-height: 100vh;
+}
+
+body:has(.water-bg-off) .app-water-bg {
+  opacity: 0;
+}
+
+.pixi-page {
+  position: relative;
+  width: 100%;
+}
+
+.liquid-flow-layer {
+  transform: translateZ(0);
+  transform-origin: center;
+  will-change: filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-flow-layer {
+    filter: none !important;
+  }
 }
 
 @property --glow-strength {
@@ -108,10 +154,8 @@ body {
   --glow-mid: 100px;
   --glow-outer: 140px;
   color: transparent;
-  background-image: linear-gradient(
-      rgba(255, 255, 255, 0.7),
-      rgba(255, 255, 255, 0.7)
-    ),
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
     radial-gradient(
       circle at var(--glow-x) var(--glow-y),
       rgba(255, 255, 255, calc(1 * var(--glow-strength))) 0,
@@ -130,7 +174,8 @@ body {
 
 .social-scroll .group:hover .ring-text {
   --glow-strength: 1;
-  background-image: linear-gradient(#ffffff, #ffffff),
+  background-image:
+    linear-gradient(#ffffff, #ffffff),
     radial-gradient(
       circle at var(--glow-x) var(--glow-y),
       rgba(255, 255, 255, 1) 0,
@@ -179,7 +224,6 @@ h6 {
   width: max-content;
   will-change: transform;
 }
-
 
 .route-loader {
   display: flex;

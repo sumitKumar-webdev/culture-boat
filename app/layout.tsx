@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "./component/Header/Header";
 import { CustomCursor } from "./component/Custom Cursor/custom-cursor";
 import PageLoader from "./component/PageLoader/page-loader";
+import WaterRippleBackground from "./component/WaterRippleBackground/water-ripple-background";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   title: "Astra Studio",
   description:
     "Animated creative studio homepage with infinitely scrolling type and image rails.",
-  manifest: "/site.webmanifest",
+  // manifest: "/site.webmanifest",
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -56,11 +57,14 @@ export default function RootLayout({
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${cormorantGaramond.variable} h-full antialiased`}
       >
-      <body className="min-h-full grid-bg">
-        <PageLoader />
-        <CustomCursor />
-        <Header />
-        {children}
+      <body className="min-h-full grid-bg relative">
+          <WaterRippleBackground />
+          <div className="app-shell">
+            <PageLoader />
+            <CustomCursor />
+            <Header />
+            {children}
+          </div>
       </body>
     </html>
   );

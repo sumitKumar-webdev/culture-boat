@@ -72,7 +72,7 @@ export default function PhotoDialog({
       onClick={() => setOpen(false)}
     >
       <div
-        className="relative z-10 w-full max-w-7xl h-[95vh] flex flex-col bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-3 md:p-6"
+        className="relative z-10 w-full max-w-4xl h-[92vh] flex flex-col bg-gradient-to-br from-gray-900/50 to-black/50 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-3 md:p-6"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex justify-center items-center mb-2 md:mb-4 relative">

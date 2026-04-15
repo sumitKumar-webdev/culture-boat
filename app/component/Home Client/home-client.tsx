@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { ImageCard } from "../Cards/image-card";
+import LiquidFlowLayer from "../LiquidFlow/liquid-flow-layer";
 
 export type HomeClientTextItem = {
   label: string;
@@ -30,7 +31,6 @@ export default function HomePageClient({
   const baseOffset = 70;
   const phaseShift = 60;
   const textContainerRef = useRef<HTMLDivElement | null>(null);
-  const textViewportRef = useRef<HTMLDivElement | null>(null);
   const leftImgRef = useRef<HTMLDivElement | null>(null);
   const rightImgRef = useRef<HTMLDivElement | null>(null);
   const boundsRef = useRef({ minX: 0, maxX: 0 });
@@ -43,11 +43,12 @@ export default function HomePageClient({
 
   useLayoutEffect(() => {
     const container = textContainerRef.current;
-    const viewport = textViewportRef.current;
     const leftImagesNode = leftImgRef.current;
     const rightImagesNode = rightImgRef.current;
 
-    if (!container || !viewport || !leftImagesNode || !rightImagesNode) return;
+    if (!container || !leftImagesNode || !rightImagesNode) {
+      return;
+    }
 
     const textNodes = Array.from(container.children) as HTMLDivElement[];
     let glowNodes: HTMLElement[] = [];
@@ -280,70 +281,76 @@ export default function HomePageClient({
   }, [textItems.length]);
 
   return (
-    <div className="relative flex h-svh w-full items-center justify-center overflow-hidden touch-none">
-      <section className="relative z-20 flex h-full w-full items-center justify-center">
-        <section className="relative z-20 flex h-full w-full items-center justify-center font-mono">
-          <div
-            ref={textViewportRef}
-            className="flex h-56 w-screen items-center justify-center overflow-hidden perspective-[520px] max-[900px]:h-48 max-[640px]:h-36 max-[640px]:perspective-[360px]"
-          >
-            <div
-              ref={textContainerRef}
-              className="relative h-full w-full text-[clamp(2.6rem,6.5vw,4.2rem)] font-bold leading-none tracking-[0.08em] opacity-0 transform-3d will-change-transform max-[900px]:text-[clamp(2.2rem,9.5vw,3.9rem)] max-[640px]:text-[clamp(3.6rem,13.5vw,5rem)]"
-            >
-              {textItems.map((item) => (
-                <div
-                  key={item.label}
-                  className="absolute left-1/2 top-1/2 w-fit whitespace-nowrap text-center backface-hidden transform-3d will-change-transform ring-text"
-                >
-                  <Link
-                    href={item.href}
-                    data-glow
-                    className="ring-text pointer-events-auto inline-block cursor-none px-6 py-3"
-                  >
-                    {item.label}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <div className="absolute inset-0 z-10 flex items-center justify-center gap-12 max-[900px]:gap-4 max-[640px]:gap-3">
-          <div
-            ref={leftImgRef}
-            className="flex w-[48%] flex-col items-end justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
-            style={{
-              transform: `translate3d(0, ${-baseOffset - phaseShift}px, 0)`,
-            }}
-          >
-            {leftImages.map((image) => (
-              <ImageCard key={image.alt} src={image.src} alt={image.alt} />
-            ))}
-          </div>
-
-          <div
-            ref={rightImgRef}
-            className="flex w-[48%] flex-col items-start justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
-            style={{
-              transform: `translate3d(0, ${baseOffset + phaseShift}px, 0)`,
-            }}
-          >
-            {rightImages.map((image) => (
-              <ImageCard key={image.alt} src={image.src} alt={image.alt} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <p className="absolute bottom-15 z-20 font-semibold tracking-[0.08em] text-white/80 max-[640px]:bottom-12 max-[640px]:text-[1rem]">
-        <span
-          data-glow
-          className="ring-text inline-block cursor-none px-2 py-1"
+    <main className="pixi-page relative">
+      <div className="relative flex h-svh w-full items-center justify-center overflow-hidden touch-none">
+        <LiquidFlowLayer
+          className="relative z-20 h-full w-full"
+          direction="vertical"
+          speed={27}
+          strength={15}
         >
-          {footerText}
-        </span>
-      </p>
-    </div>
+          <section className="relative flex h-full w-full items-center justify-center">
+            <section className="relative z-20 flex h-full w-full items-center justify-center font-mono">
+              <div className="flex h-56 w-screen items-center justify-center overflow-hidden perspective-[520px] max-[900px]:h-48 max-[640px]:h-36 max-[640px]:perspective-[360px]">
+                <div
+                  ref={textContainerRef}
+                  className="relative h-full w-full text-[clamp(2.6rem,6.5vw,4.2rem)] font-bold leading-none tracking-[0.08em] opacity-0 transform-3d will-change-transform max-[900px]:text-[clamp(2.2rem,9.5vw,3.9rem)] max-[640px]:text-[clamp(3.6rem,13.5vw,5rem)]"
+                >
+                  {textItems.map((item) => (
+                    <div
+                      key={item.label}
+                      className="absolute left-1/2 top-1/2 w-fit whitespace-nowrap text-center backface-hidden transform-3d will-change-transform ring-text"
+                    >
+                      <Link
+                        href={item.href}
+                        data-glow
+                        className="ring-text pointer-events-auto inline-block cursor-none px-6 py-3"
+                      >
+                        {item.label}
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <div className="absolute inset-0 z-10 flex items-center justify-center gap-12 max-[900px]:gap-4 max-[640px]:gap-3">
+              <div
+                ref={leftImgRef}
+                className="flex w-[48%] flex-col items-end justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
+                style={{
+                  transform: `translate3d(0, ${-baseOffset - phaseShift}px, 0)`,
+                }}
+              >
+                {leftImages.map((image) => (
+                  <ImageCard key={image.alt} src={image.src} alt={image.alt} />
+                ))}
+              </div>
+
+              <div
+                ref={rightImgRef}
+                className="flex w-[48%] flex-col items-start justify-center gap-10 will-change-transform max-[900px]:gap-7 max-[640px]:w-[47%] max-[640px]:gap-5"
+                style={{
+                  transform: `translate3d(0, ${baseOffset + phaseShift}px, 0)`,
+                }}
+              >
+                {rightImages.map((image) => (
+                  <ImageCard key={image.alt} src={image.src} alt={image.alt} />
+                ))}
+              </div>
+            </div>
+
+            <p className="absolute bottom-15 z-20 font-semibold tracking-[0.08em] text-white/80 max-[640px]:bottom-12 max-[640px]:text-[1rem]">
+              <span
+                data-glow
+                className="ring-text inline-block cursor-none px-2 py-1"
+              >
+                {footerText}
+              </span>
+            </p>
+          </section>
+        </LiquidFlowLayer>
+      </div>
+    </main>
   );
 }

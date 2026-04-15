@@ -156,7 +156,7 @@ export default function PageLoader({ mode = "auto" }: PageLoaderProps) {
     <AnimatePresence initial={false}>
       {active && (
         <motion.div
-          className="route-loader fixed inset-0 z-[100] bg-[#1c1917]"
+          className="route-loader fixed inset-0 z-100 bg-[#1c1917]"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
